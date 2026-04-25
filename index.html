@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AidBridge | Disaster Relief Coordination</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Real-time disaster relief coordination platform">
+    <meta name="theme-color" content="#050508">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+</head>
+<body>
+    <div class="background-effects"></div>
+    <div class="floating-particles"></div>
+    <div class="grid-overlay"></div>
+    <div class="noise-overlay"></div>
+    
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="logo">
+                <span class="logo-glow"></span>
+                <span class="logo-text">AidBridge</span>
+            </h1>
+            <p class="tagline">Real-time disaster relief coordination</p>
+            <div class="nav-buttons">
+                <button class="nav-btn" id="nav-disasters" onclick="showPanel('disasters')">
+                    <span>Disasters</span>
+                </button>
+                <button class="nav-btn" id="nav-help" onclick="showPanel('help')">
+                    <span>Request Help</span>
+                </button>
+                <button class="nav-btn" id="nav-dashboard" onclick="showPanel('dashboard')">
+                    <span>Volunteer Dashboard</span>
+                </button>
+                <button class="nav-btn logout-btn" onclick="handleLogout()">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+            <div class="user-info">
+                <span class="user-email" id="userEmail"></span>
+            </div>
+        </header>
+
+        <main>
+            <div id="help-panel" class="panel active">
+                <div class="panel-header">
+                    <h2>Request Help</h2>
+                    <p>Submit your need for assistance</p>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-reflection"></div>
+                    <form id="help-form" autocomplete="off">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" placeholder="Enter your name" autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="checkbox-group" onclick="toggleAnonymous()">
+                                <input type="checkbox" id="anonymous">
+                                <label for="anonymous">Stay Anonymous</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <div class="location-input-wrapper">
+                                <input type="text" id="location" placeholder="e.g., Near Central School" autocomplete="off">
+                                <button type="button" class="location-btn" id="geoBtn" onclick="getLocation()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17.657 16.657l-2.12-2.121a8 8 0 10-11.313 0l2.121 2.121a1 1 0 001.414-1.414L6.343 3.757a10 10 0 0014.143 3.143l-2.343 2.343a1 1 0 00-.293.707v.001a1 1 0 001.415 1.414l2.343-2.343a10 10 0 003.142 14.143l-2.122 2.121a1 1 0 101.414 1.414z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <span>Get Location</span>
+                                </button>
+                            </div>
+                            <p class="error-message" id="location-error">Please provide a location</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="helpType">Help Type</label>
+                            <select id="helpType">
+                                <option value="">Select type of help needed</option>
+                                <option value="Food">Food</option>
+                                <option value="Medical">Medical</option>
+                                <option value="Rescue">Rescue</option>
+                                <option value="Shelter">Shelter</option>
+                            </select>
+                            <p class="error-message" id="helpType-error">Please select the type of help needed</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Urgency Level</label>
+                            <div class="urgency-selector">
+                                <div class="urgency-option low" onclick="selectUrgency('low')">
+                                    <input type="radio" id="urgencyLow" name="urgency" value="low">
+                                    <label for="urgencyLow">Low</label>
+                                </div>
+                                <div class="urgency-option medium selected" onclick="selectUrgency('medium')">
+                                    <input type="radio" id="urgencyMedium" name="urgency" value="medium" checked>
+                                    <label for="urgencyMedium">Medium</label>
+                                </div>
+                                <div class="urgency-option high" onclick="selectUrgency('high')">
+                                    <input type="radio" id="urgencyHigh" name="urgency" value="high">
+                                    <label for="urgencyHigh">High</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Describe Your Situation</label>
+                            <textarea id="description" rows="4" placeholder="Please describe your emergency situation, including any specific details that volunteers should know..."></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Submit Request</button>
+
+                        <div class="confirmation" id="confirmation">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <h3>Request Submitted!</h3>
+                            <p>Your help request has been sent. Volunteers will respond shortly.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="disasters-panel" class="panel">
+                <div class="panel-header">
+                    <h2>Active Disasters</h2>
+                    <p>Real-time disaster information from around the world</p>
+                    <div class="disaster-search-wrapper">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <input type="text" id="disaster-search" placeholder="Search by state, country, or disaster type..." oninput="searchDisasters(this.value)">
+                    </div>
+                    <button class="refresh-btn" onclick="refreshDisasters()">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6M1 20v-6h6"/>
+                            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
+                <div class="disasters-grid" id="disasters-grid">
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Loading disaster data...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashboard-panel" class="panel">
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Volunteer Dashboard</h2>
+                    <div class="dashboard-stats">
+                        <span class="stat-badge pending" id="pending-count">0 Pending</span>
+                        <span class="stat-badge accepted" id="accepted-count">0 Accepted</span>
+                        <span class="stat-badge completed" id="completed-count">0 Completed</span>
+                    </div>
+                </div>
+                <div class="filter-tabs" id="filter-tabs"></div>
+                <div class="cards-grid" id="cards-grid"></div>
+            </div>
+        </main>
+    </div>
+
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header" onclick="toggleChat()">
+            <div class="chat-header-left">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+                <span>AI Disaster Assistant</span>
+            </div>
+            <svg class="chat-toggle-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+            </svg>
+        </div>
+        <div class="chat-body">
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message bot">
+                    <p>Hello! I'm your AI Disaster Assistant. Ask me about:</p>
+                    <ul>
+                        <li>Current disasters worldwide</li>
+                        <li>Safety tips during emergencies</li>
+                        <li>How to prepare for disasters</li>
+                        <li>Relief efforts and resources</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="chat-input-wrapper">
+                <input type="text" id="chatInput" placeholder="Ask me anything..." onkeypress="handleChatKeyPress(event)">
+                <button onclick="sendChatMessage()">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
