@@ -1,5 +1,12 @@
 # novus2k26
-App for  people that need  help during disaster ...
+App for  people that need  help during disaster ... 
+
+BY NATIONAL ENGLISH SCHOOL VIP ROAD :
+MADE BY : 
+. PRIYANSHU MONDAL
+. SAI SIDDHARHA MAHARANA 
+. RISHI PAL 
+. RAJDIP RANG
 
 
 # 🌐 Disaster Relief Coordination Web App
